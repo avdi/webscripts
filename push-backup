@@ -5,20 +5,16 @@ remote=${3:-origin}
 branch=${4:-master}
 dir=${1:?"Usage: $0 dir [name=${name}] [remote=${remote}] [branch=${branch}] [options]"}
 mailto='avdi.grimm+admin@gmail.com'
-log="${HOME}/log/`basename $0`-`basename ${dir}`-${name}-$$.log"
-mkdir -p `dirname ${log}`
-echo "Logging to ${log}" | tee -a ${log}
-echo "Date: `date --rfc-2822 --utc`" | tee -a ${log}
-echo "Backing up ${dir}" | tee -a ${log}
-echo "Backup name: ${name}" | tee -a ${log}
-echo "Remote: ${remote}" | tee -a ${log}
-echo "Branch: ${branch}" | tee -a ${log}
-(cd ${dir} 2>&1 && \
+echo "Date: `date --rfc-2822 --utc`"
+echo "Backing up ${dir}"
+echo "Backup name: ${name}"
+echo "Remote: ${remote}"
+echo "Branch: ${branch}"
+cd ${dir} 2>&1 && \
     git add -A 2>&1 && \
     git commit -m "${name}" 2>&1 && \
-    git push ${remote} ${branch} 2>&1) | tee -a ${log} 
-echo "Mailing log to ${mailto}" | tee -a ${log}
-mail -s "Backup report ${dir} ${name}" "${mailto}" < ${log}
+    git push ${remote} ${branch}
+
 
 
 
